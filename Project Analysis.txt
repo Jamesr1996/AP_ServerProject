@@ -1,0 +1,28 @@
+Testing the project requires starting the server and telnetting in VIA putty.
+hostname: localhost
+port: 9801 (Unless specified otherwise)
+connection type: raw
+Close window on exit: Never
+
+Once connected to the server in Putty, you can then use commands to manage data e.g. 
+101
+james
+password
+
+will login to the user "james" so long as it exists in the pwd.txt file.
+
+Password File Stores User information in the form: 
+Username Password
+
+So for the above example, in order for me to be able to login the pwd.txt file must look like:
+james password
+
+(Note that for this to work you must also have the password on the same line as the username).
+
+Users can be added to this file to create more accounts. Use FileWriters & FileOutputStreams to create 
+new users by amending to the pwd.txt file.
+
+User Data is stored in the 'userInfo' variable (of type Properties). This data is extracted in line 38 (MessageServer class)
+and copied into userInfo in line 40.
+
+
