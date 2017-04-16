@@ -1,0 +1,52 @@
+package msgServer;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+public class UserRegistration implements Command {
+	private BufferedWriter out;
+	private BufferedReader in;
+	private MsgSvrConnection conn;
+
+
+	/**
+	 * Execute the command.
+	 */
+	public void execute() throws IOException {
+
+
+	}
+
+	public UserRegistration (BufferedReader in, BufferedWriter out, MsgSvrConnection serverConn) throws IOException
+	{
+		try
+		{
+			
+			File file = new File("pwd.txt");
+			FileWriter fw = new FileWriter(file, true);	
+			BufferedWriter bw = new BufferedWriter(fw);
+			PrintWriter pw = new PrintWriter(fw);
+			fw.close();
+		}catch(Exception e){
+			System.out.println(e);
+
+			this.in = in;
+			this.out = out;
+			this.conn = serverConn;
+		}
+	}
+}
+
+
+/* Write to the Pwd file with a Username + Password (any other reqs)
+	An input stream to take data from the console = Buffered Reader in = in.readLine();
+	Append dont overwrite.
+
+	An output stream to write to the pwd file = make a FileWriter fw = new FileWriter("C:\\Users\\...");
+	BufferedWriter bw = new BufferedWriter(fw);
+	bw.write("Your string here");
+
+ */
