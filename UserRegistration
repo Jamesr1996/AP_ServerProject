@@ -10,43 +10,56 @@ public class UserRegistration implements Command {
 	private BufferedWriter out;
 	private BufferedReader in;
 	private MsgSvrConnection conn;
-
-
 	/**
 	 * Execute the command.
 	 */
 	public void execute() throws IOException {
-
+		{
+			try
+			{
+				File file = new File("pwd.txt");
+				FileWriter fw = new FileWriter(file, true);	
+				BufferedWriter bw = new BufferedWriter(fw);
+				
+				out.write("Username:\r\n");
+				out.flush();
+				fw.write("\n" + in.readLine());
+				
+				out.write("Password:\r\n");
+				out.flush();
+				fw.write(" " + in.readLine());
+				
+				out.write("DoB:\r\n");
+				out.flush();
+				fw.write(" " + in.readLine());
+				
+				out.write("Tel no:\r\n");
+				out.flush();
+				fw.write(" " + in.readLine());
+				
+				out.write("Address:\r\n");
+				out.flush();
+				fw.write(" " + in.readLine());
+				
+				fw.close();
+				bw.close();
+				
+				out.write("200\r\n");
+				out.flush();
+				
+				
+			}catch(IOException e){
+				System.out.println(e.getMessage());
+			}
+		}
 
 	}
 
-	public UserRegistration (BufferedReader in, BufferedWriter out, MsgSvrConnection serverConn) throws IOException
+	public UserRegistration(BufferedReader in, BufferedWriter out, MsgSvrConnection serverConn) throws IOException
 	{
-		try
-		{
-			
-			File file = new File("pwd.txt");
-			FileWriter fw = new FileWriter(file, true);	
-			BufferedWriter bw = new BufferedWriter(fw);
-			PrintWriter pw = new PrintWriter(fw);
-			fw.close();
-		}catch(Exception e){
-			System.out.println(e);
-
 			this.in = in;
 			this.out = out;
 			this.conn = serverConn;
 		}
-	}
+	
 }
-
-
-/* Write to the Pwd file with a Username + Password (any other reqs)
-	An input stream to take data from the console = Buffered Reader in = in.readLine();
-	Append dont overwrite.
-
-	An output stream to write to the pwd file = make a FileWriter fw = new FileWriter("C:\\Users\\...");
-	BufferedWriter bw = new BufferedWriter(fw);
-	bw.write("Your string here");
-
- */
