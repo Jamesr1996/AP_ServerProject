@@ -1,0 +1,54 @@
+package msgServer;
+
+import java.sql.*;
+import java.io.FileInputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
+
+public abstract class DBCommand implements Command {
+
+	private String dbURL;
+	private String driverName;
+	private String username;
+	private String password;
+	private Connection dbconn;
+
+	public DBCommand() {
+		dbURL = "jdbc:ucanaccess:C:\\Users\\James\\Desktop\\ServerDatabase.accdb";
+		driverName = "sun.jdbc.odbc.JdbcOdbcDriver";
+		username = "";
+		password = "";
+	}
+
+	protected void makeConnection() {
+		try {
+			Class.forName(driverName);
+		} catch (ClassNotFoundException cnf) {
+			System.out.println("Problem loading driver");
+			System.exit(1);
+		}
+
+		try {
+			dbconn = DriverManager.getConnection(dbURL, username, password);
+			System.out.println("Connected to the database.");
+			execute();
+		} catch (SQLException e) {
+			System.out.println("Error reading database");
+		} catch (IOException e) {
+			System.err.println(e.getMessage());
+		} finally {
+			if (dbconn != null) {
+				try {
+					dbconn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+	}
+
+	public Connection getConnection() {
+		return dbconn;
+	}
+
+}
