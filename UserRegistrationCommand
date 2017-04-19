@@ -1,0 +1,76 @@
+package msgServer;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.*;
+
+public class UserRegistrationCommand extends DBCommand implements Command {
+	private BufferedWriter out;
+	private BufferedReader in;
+	private MsgSvrConnection conn;
+
+	/**
+	 * Execute the command.
+	 */
+	public void execute() throws IOException {
+		{
+			try {
+				DBCommand dbc = new DBCommand();		/// Error???
+				Connection dbconn = getConnection();
+				
+				Statement stmt = dbconn.createStatement();
+				
+				stmt.clearBatch();
+				// Add SQL STATEMENTS (TODO)
+				
+				FileWriter fw = new FileWriter("C:\\Users\\James\\Desktop\\pwd.txt", true);
+				BufferedWriter bw = new BufferedWriter(fw);
+
+				out.write("Username:\r\n");
+				out.flush();
+				fw.write("\n" + in.readLine());
+
+				out.write("Password:\r\n");
+				out.flush();
+				fw.write(" " + in.readLine());
+
+				out.write("DoB:\r\n");
+				out.flush();
+				fw.write(" " + in.readLine());
+
+				out.write("Tel no:\r\n");
+				out.flush();
+				fw.write(" " + in.readLine());
+
+				out.write("Address:\r\n");
+				out.flush();
+				fw.write(" " + in.readLine());
+
+				fw.close();
+				bw.close();
+
+				out.write("200\r\n");
+				out.flush();
+
+
+			} catch (IOException e) {
+				System.out.println(e.getMessage());
+			} catch (SQLException sqle){
+				System.out.println(sqle);
+			}
+		}
+
+	}
+
+	public UserRegistrationCommand(BufferedReader in, BufferedWriter out, MsgSvrConnection serverConn)
+			throws IOException {
+		this.in = in;
+		this.out = out;
+		this.conn = serverConn;
+	}
+
+}
