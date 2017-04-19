@@ -1,0 +1,41 @@
+package msgServer;
+
+import java.io.*;
+import sun.audio.*;
+
+
+public class SetReminder implements Command {
+	private BufferedWriter out;
+	private BufferedReader in;
+	private MsgSvrConnection conn;
+
+	/**
+	 * Execute the command.
+	 */
+	public void execute() throws IOException {
+		{
+			try
+			{
+				String wav_file= "MetalMetronome.wav";
+				InputStream in = new FileInputStream(wav_file);
+				AudioStream audio = new AudioStream(in);
+				AudioPlayer.player.start(audio);
+			
+			}catch(IOException e){
+				System.out.println(e.getMessage());
+
+			
+		}
+		}
+		
+	}
+
+
+public SetReminder(BufferedReader in, BufferedWriter out, MsgSvrConnection serverConn) throws IOException
+{
+		this.in = in;
+		this.out = out;
+		this.conn = serverConn;
+	}
+
+}
