@@ -1,0 +1,103 @@
+package msgServer;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
+
+public class UpdateUserRegistrationCommand implements Command {
+	private BufferedWriter out;
+	private BufferedReader in;
+	private MsgSvrConnection conn;
+	private ArrayList<String> data = new ArrayList<String>();
+
+	/**
+	 * Execute the command.
+	 */
+	public void execute() throws IOException {
+		{
+			// Must be logged in to change the user details
+			String user = in.readLine();
+			if (user != null && conn.getCurrentUser().equals(user)) {
+				try {
+					FileReader fr = new FileReader("C:\\Users\\James\\Desktop\\pwd.txt");
+					BufferedReader br = new BufferedReader(fr);
+					String info = "";
+					// Copy the PWD file to the Data array.
+					while (info != null) {
+						info = br.readLine();
+						if (info != null) {
+							data.add(info);
+						}
+					}
+					StringTokenizer st = null;
+					int line = 0;
+					for (int i = 0; i < data.size(); i++) {
+						st = new StringTokenizer(data.get(i));
+						if (st.nextToken().equals(user)) {
+							// is the correct user
+							line = i;
+						}
+					}
+					// Done reading
+					br.close();
+					fr.close();
+
+					FileWriter fw = new FileWriter("C:\\Users\\James\\Desktop\\pwd.txt", false);
+					BufferedWriter bw = new BufferedWriter(fw);
+					for (int i = 0; i < data.size(); i++) {
+						if (line == i) {
+							String payload = "";
+							out.write("Username:\r\n");
+							out.flush();
+							payload += in.readLine();
+
+							out.write("Password:\r\n");
+							out.flush();
+							payload += " " + in.readLine();
+
+							out.write("DoB:\r\n");
+							out.flush();
+							payload += " " + in.readLine();
+
+							out.write("Tel no:\r\n");
+							out.flush();
+							payload += " " + in.readLine();
+
+							out.write("Address:\r\n");
+							out.flush();
+							payload += " " + in.readLine();
+
+							out.write("200\r\n");
+							out.flush();
+							data.remove(line);
+							data.add(payload);
+						}
+						bw.write(data.get(i));
+						bw.newLine();
+					}
+					bw.flush();
+					fw.flush();
+					bw.close();
+					fw.close();
+
+				} catch (IOException e) {
+					System.err.println(e.getMessage());
+				}
+			} else {
+				new ErrorCommand(in, out, conn, "Must be logged in to edit user info").execute();
+			}
+		}
+	}
+
+	public UpdateUserRegistrationCommand(BufferedReader in, BufferedWriter out, MsgSvrConnection serverConn)
+			throws IOException {
+		this.in = in;
+		this.out = out;
+		this.conn = serverConn;
+	}
+}
