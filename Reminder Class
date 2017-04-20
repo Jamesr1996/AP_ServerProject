@@ -1,0 +1,38 @@
+package msgServer;
+
+import java.util.Calendar;
+import java.util.Date;
+
+public class Reminder extends Thread {
+
+	private Date remDate;
+	private boolean bStop = false;
+
+	public Reminder(String remName, Date remDate) {
+		super(remName);
+		this.remDate = remDate;
+		start();
+	}
+
+	public void run() {
+		while (bStop == false) {
+			try {
+				// Get the current time to compare with date
+				Calendar cal = Calendar.getInstance();
+				Date currDate = cal.getTime();
+
+				if (currDate.equals(remDate)) {
+					// Play sound here
+					
+					// Terminate the thread
+					bStop = true;
+				}
+				Thread.currentThread().sleep(1000);
+
+			} catch (InterruptedException ie) {
+				System.out.println(ie);
+			}
+		}
+	}
+
+}
