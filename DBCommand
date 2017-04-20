@@ -1,0 +1,49 @@
+package msgServer;
+
+import java.sql.*;
+import java.io.IOException;
+
+public abstract class DBCommand implements Command {
+
+	private String dbURL;
+	private String driverName;
+	private String username;
+	private String password;
+	private Connection dbconn = null;
+
+	public DBCommand() {
+		dbURL = "jdbc:ucanaccess://Z:\\ServerDatabase.mdb";
+		driverName = "sun.jdbc.odbc.JdbcOdbcDriver";
+		username = "";
+		password = "";
+	}
+
+	protected void makeConnection() {
+		try {
+			dbconn = DriverManager.getConnection(dbURL, username, password);
+			System.out.println("Connected to the database.");
+			execute();
+		} catch (SQLException e) {
+			System.out.println("Error reading database");
+			System.err.println(e.getMessage());
+		} catch (IOException e) {
+			System.err.println(e.getMessage());
+		} finally {
+			if (dbconn != null) {
+				try {
+					dbconn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+	}
+	
+	public Connection getConnection() {
+		if (dbconn == null){
+			makeConnection();
+			getConnection();
+		}
+		return dbconn;
+	}
+
+}
