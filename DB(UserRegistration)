@@ -1,0 +1,82 @@
+package msgServer;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.sql.*;
+import java.io.FileWriter;
+import java.io.IOException;
+
+
+public class UserRegistration extends DBCommand implements Command {
+	private BufferedWriter out;
+	private BufferedReader in;
+	private MsgSvrConnection conn;
+	
+	/**
+	 * Execute the command.
+	 */
+	public void execute() throws IOException {
+		{
+			try
+			{	
+				Connection dbconn = getConnection();
+				Statement stmt = dbconn.createStatement();
+				stmt.clearBatch();
+				
+				FileWriter fw = new FileWriter("Z:\\pwd.txt", true);	
+				BufferedWriter bw = new BufferedWriter(fw);
+				
+				out.write("Username:\r\n");
+				out.flush();
+				bw.newLine();
+				String username = in.readLine();
+				bw.write(username);	
+
+				out.write("Password:\r\n");
+				out.flush();
+				bw.write(" " + in.readLine());
+				
+				out.write("DoB (YYYY-MM-DD):\r\n");
+				out.flush();
+				String dob = in.readLine();
+				bw.write(" " + dob);
+				
+				out.write("Tel no:\r\n");
+				out.flush();
+				String tel = in.readLine();
+				bw.write(" " + tel);
+				
+				out.write("Address:\r\n");
+				out.flush();
+				String addr = in.readLine();
+				bw.write(" " + addr);
+				
+				bw.flush();
+				fw.flush();
+				System.out.println("Flushed");
+				fw.close();
+				bw.close();
+				System.out.println("Closed");
+				
+				out.write("200\r\n");
+				out.flush();
+				String statement = "'" + username + "', #" + dob + "#, " + tel + ", '" + addr + "')";
+				System.out.println(statement);
+				stmt.execute("INSERT INTO UserDetails VALUES("+statement);
+				
+			}catch(IOException e){
+				System.out.println(e.getMessage());
+			}catch(SQLException sqle){
+				System.out.println("Error here");
+				System.out.println(sqle);
+			}
+		}
+	}
+
+	public UserRegistration(BufferedReader in, BufferedWriter out, MsgSvrConnection serverConn) throws IOException
+	{
+			this.in = in;
+			this.out = out;
+			this.conn = serverConn;
+		}
+	
+}
