@@ -1,0 +1,75 @@
+import java.sql.*;
+import java.io.FileInputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
+
+public class SetUpDB extends GenericDBCommand {
+
+	public SetUpDB(String dbType) {
+		super(dbType);
+	}
+
+	public void execute() {
+		try {
+			// Create a connection object (conn) use the getConnection() method
+			// of the GenericDBCommand
+			// .......
+				Connection conn = getConnection();
+			// create a statement object (stmt) on the connection
+			// .......
+				Statement stmt = conn.createStatement();
+				
+			// Clear the batch of the statement object use the method
+			// clearBatch() of the statment class
+			// check method in the java class library
+			// .......
+				stmt.clearBatch();
+				
+
+			try {
+				// Read the text file Setup_Year2.txt which includes SQL
+				// commands
+				// Use a BufferedReader on the inputStreamReader of the
+				// FileInputStream
+				// BufferedReader in = .......
+				FileInputStream fis = new FileInputStream("C:\\Users\\s15121033\\Downloads\\Seas\\Seas\\Seas_Year2.txt");
+				InputStreamReader isr = new InputStreamReader(fis);
+				BufferedReader in = new BufferedReader(isr);
+
+				String line;
+
+				while ((line = in.readLine()) != null && !line.equals("")) {
+					// Add the list of SQL commands to the created Statement
+					// object.
+					// use the method addBatch() of the statment class
+					// check method and its functionality in the java class
+					// library
+					// ..........
+					System.out.println("Writing command: " + line);
+					stmt.execute(line);
+				}
+				fis.close();
+				isr.close();
+				in.close();
+				
+			} catch (IOException e) {
+				System.out.println(e);
+				return;
+			}
+
+		} catch (SQLException sqle) {
+			System.out.println(sqle);
+		}
+	}
+
+	public static void main(String[] args) {
+		if (args.length == 1) {
+			SetUpDB gbl = new SetUpDB(args[0]);
+			gbl.makeConnection();
+		} else {
+			System.out.println("command line argument: either oracle or access");
+			System.exit(0);
+		}
+	}
+}
