@@ -1,0 +1,50 @@
+import java.sql.*; 
+
+public abstract class GenericDBCommand implements Command {
+    private String dbURL;
+    private String driverName;
+    private String username;
+    private String password;
+    private Connection conn = null;
+
+    public GenericDBCommand(String dbType) {
+	if (dbType.equals("access")) {
+	    
+	    dbURL = "jdbc:ucanaccess://C:/Users/s15121033/Downloads/Seas/Seas/Seas.mdb";
+	    driverName = "sun.jdbc.odbc.JdbcOdbcDriver";
+	    username = "";
+	    password = "";
+	} else if (dbType.equals("oracle")) {
+	    dbURL = "jdbc:oracle:thin:@owatatsumi.aston.ac.uk:1521:ora1";
+	    driverName = "oracle.jdbc.driver.OracleDriver";
+	    // Don't forget to enter your username and password...
+	    username = "YourOracleUsername";
+	    password = "YourOraclePassword";
+	} else {
+	    throw new IllegalArgumentException("Argument: " + dbType + " is not a database I recognize.  You can use either 'access' or 'oracle'.");
+	}
+    }
+
+    protected void makeConnection() {
+	try{
+	    conn = DriverManager.getConnection (dbURL, 
+						username,
+						password);
+	    System.out.println ("Connected to the database.");
+	    // Execute SQL Statement
+	    execute();
+	} catch (SQLException e) {
+	    System.out.println ("Error reading database");
+	} finally {
+	    if (conn != null) {
+		try {
+		    conn.close();
+		} catch (SQLException e) {}
+	    }  
+	}
+    }
+
+    public Connection getConnection() {
+	return conn;
+    }
+}
