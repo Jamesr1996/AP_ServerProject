@@ -1,0 +1,54 @@
+package msgServer;
+
+import java.io.*;
+import sun.audio.*;
+import java.util.Date;
+import java.util.Calendar;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
+public class SetReminderCommand implements Command {
+	private BufferedWriter out;
+	private BufferedReader in;
+	private MsgSvrConnection conn;
+	private Date date;
+	private String remName = "";
+
+	/**
+	 * Execute the command.
+	 */
+
+	public SetReminderCommand(BufferedReader in, BufferedWriter out, MsgSvrConnection serverConn) throws IOException {
+		this.in = in;
+		this.out = out;
+		this.conn = serverConn;
+	}
+
+	public void execute() throws IOException {
+			try	{
+				out.write("Enter a reminder name:\r\n");
+				out.flush();
+				remName = in.readLine();
+				
+				out.write("Enter a reminder time (HH:mm:ss):\r\n");
+				out.flush();
+				String time = in.readLine();
+				
+				out.write("Enter a date for the reminder (dd-MMM-yyyy):\r\n");
+				String days = in.readLine();
+				
+				// Sets the format for the date
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+				Date remDate = dateFormat.parse(days + time);
+				
+				Reminder rem = new Reminder(remName, remDate);
+				rem.start();
+				
+			}catch(IOException e){
+				System.out.println(e.getMessage());
+			} catch (ParseException pe){
+				System.out.println(pe);
+			}
+		}
+		
+}
