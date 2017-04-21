@@ -1,0 +1,26 @@
+/**
+ * Created by Jamel and Alex on 21/04/2017.
+ */
+import javax.swing.*;
+
+    /**
+     * Created by Jamel and Alex on 21/04/2017.
+     */
+    public class PopUPMessage {
+
+        public static void main(String []args){{
+            int x = 10;
+            int y = 5;
+            if (x < y) {
+
+                JOptionPane.showMessageDialog(null, "This is just a reminder", "Reminder", JOptionPane.INFORMATION_MESSAGE);
+
+            }else {
+                System.out.println("NO LUCK");
+            }
+        }
+        }
+
+    }
+
+
